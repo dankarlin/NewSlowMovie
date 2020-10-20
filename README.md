@@ -34,7 +34,7 @@ changes will not be compiled into `spi.c`.
 
 ## SlowMovie (https://github.com/TomWhitwell/SlowMovie)
 
-![](Extras/img.jpg)
+![](player/Extras/img.jpg)
 
 ### Python / Raspberry Pi interpretation of Bryan Boyer's Very Slow Movie Player  
 
