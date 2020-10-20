@@ -32,7 +32,7 @@ by communicating with the Linux kernel through `/dev/spidev*`. This means:
 If you modify `spi.pyx`, make sure to set the `USE_CYTHON` environment variable before building---otherwise your
 changes will not be compiled into `spi.c`.
 
-##SlowMovie (https://github.com/TomWhitwell/SlowMovie)
+## SlowMovie (https://github.com/TomWhitwell/SlowMovie)
 
 ![](Extras/img.jpg)
 
