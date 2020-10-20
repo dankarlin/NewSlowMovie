@@ -1,19 +1,9 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-# *************************
-# ** Before running this **
-# ** code ensure you've  **
-# ** turned on SPI on    **
-# ** your Raspberry Pi   **
-# ** & installed the     **
-# ** Waveshare library   **
-# *************************
-
-import os, time, sys, random 
+import os, sys, random, time
 from PIL import Image
 import ffmpeg
-from greg.IT8951.test.integration import *
 from working_test_functions import *
 
 def generate_frame(in_filename, out_filename, time, width, height):    
@@ -27,6 +17,9 @@ def generate_frame(in_filename, out_filename, time, width, height):
         .run(capture_stdout=True, capture_stderr=True)
     )
 
+
+viddir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '/home/pi/Videos/')
+
 from IT8951.display import AutoEPDDisplay
 
 print('Initializing EPD...')
@@ -38,21 +31,6 @@ print('Initializing EPD...')
 display = AutoEPDDisplay(vcom=-1.55, rotate=None, spi_hz=24000000)
 
 print('VCOM set to', display.epd.get_vcom())
-
-# Ensure this is the correct import for your particular screen 
-#from waveshare_epd import epd7in5_V2
-
-# Ensure this is the correct path to your video folder 
-viddir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Videos/')
-
-# Ensure this is the correct driver for your particular screen 
-#epd = epd7in5_V2.EPD()
-
-# Initialise and clear the screen 
-#epd.init()
-print_system_info(display)
-clear_display(display)
-#epd.Clear()    
 
 while 1: 
 
@@ -87,13 +65,10 @@ while 1:
     pil_im = pil_im.convert(mode='1',dither=Image.FLOYDSTEINBERG)
 
     # display the image 
-    epd.display(epd.getbuffer(pil_im))
+    display_image_8bpp(display, 'grab.jpg')
     print('Diplaying frame %d of %s' %(frame,currentVideo))
     
     # Wait for 10 seconds 
     time.sleep(10)
     
-# NB We should run sleep() while the display is resting more often, but there's a bug in the driver that's slightly fiddly to fix. Instead of just sleeping, it completely shuts down SPI communication 
-epd.sleep()
-epd7in5.epdconfig.module_exit()
 exit()
