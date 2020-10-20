@@ -1,7 +1,8 @@
 # NewSlowMovie
+Integrates two projects for one nice functional output of a slowmovie. Built for the 10.3 inch screen from WaveShare
+https://www.waveshare.com/wiki/10.3inch_e-Paper_HAT_(D)
 
 ## IT8951 (https://github.com/GregDMeyer/IT8951)
-
 This Python 3 module implements a driver for the IT8951 e-paper controller, via SPI.
 The driver was developed using the 6-inch e-Paper HAT from Waveshare. It hopefully will work for
 other (related) hardware too.
@@ -11,13 +12,7 @@ To install, clone the repository, enter the directory and run
 pip install -r requirements.txt
 pip install ./
 ```
-
-Make sure that SPI is enabled in `raspi-config`.
-
----
-
-For some examples of usage, take a look at the integration tests.
-
+Make sure that SPI is enabled in `raspi-config`. For some examples of usage, take a look at the integration tests.
 ### Notes on performance
 #### VCOM value
 You should try setting different VCOM values and seeing how that affects the performance of your display. Every
@@ -36,3 +31,15 @@ by communicating with the Linux kernel through `/dev/spidev*`. This means:
 ### Hacking
 If you modify `spi.pyx`, make sure to set the `USE_CYTHON` environment variable before building---otherwise your
 changes will not be compiled into `spi.c`.
+
+##SlowMovie (https://github.com/TomWhitwell/SlowMovie)
+
+![](Extras/img.jpg)
+
+### Python / Raspberry Pi interpretation of Bryan Boyer's Very Slow Movie Player  
+
+Full writeup of this project here:   
+https://medium.com/@tomwhitwell/how-to-build-a-very-slow-movie-player-in-2020-c5745052e4e4
+
+Bryan's original post here:  
+https://medium.com/s/story/very-slow-movie-player-499f76c48b62  
