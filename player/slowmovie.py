@@ -9,14 +9,11 @@
 # ** & installed the     **
 # ** Waveshare library   **
 # *************************
-
-import os, time, sys, random 
+ 
+import os, sys, random, time, argparse, ffmpeg
 from PIL import Image
-import ffmpeg
-import argparse
-
-# Ensure this is the correct import for your particular screen 
-from waveshare_epd import epd7in5_V2
+from working_test_functions import *
+from IT8951.display import AutoEPDDisplay
 
 def generate_frame(in_filename, out_filename, time, width, height):    
     (
@@ -35,7 +32,7 @@ def check_mp4(value):
     return value
 
 # Ensure this is the correct path to your video folder 
-viddir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Videos/')
+viddir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '/home/pi/Videos/')
 logdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'logs/')
 
 
@@ -128,16 +125,17 @@ if args.file:
 print("The current video is %s" %currentVideo)
 
 # Ensure this is the correct driver for your particular screen 
-epd = epd7in5_V2.EPD()
-
+# epd = epd7in5_V2.EPD()
 # Initialise and clear the screen 
-epd.init()
-epd.Clear()    
+# epd.init()
+# epd.Clear()
+
+display = AutoEPDDisplay(vcom=-1.55, rotate=None, spi_hz=24000000)
+print('VCOM set to', display.epd.get_vcom())
 
 currentPosition = 0
 
 # Open the log file and update the current position 
-
 log = open(logdir + '%s<progress'%currentVideo)
 for line in log:
     currentPosition = float(line)
@@ -147,8 +145,8 @@ if args.start:
     currentPosition = float(args.start)
 
 # Ensure this matches your particular screen 
-width = 800 
-height = 480 
+width = 1872 
+height = 1404 
 
 inputVid = viddir + currentVideo
 
@@ -157,25 +155,21 @@ frameCount = int(ffmpeg.probe(inputVid)['streams'][0]['nb_frames'])
 print("there are %d frames in this video" %frameCount)
 
 while 1: 
-
     if args.random:
         frame = random.randint(0,frameCount)
     else: 
         frame = currentPosition
 
     msTimecode = "%dms"%(frame*41.666666)
-        
     # Use ffmpeg to extract a frame from the movie, crop it, letterbox it and save it as grab.jpg 
     generate_frame(inputVid, 'grab.jpg', msTimecode, width, height)
-    
     # Open grab.jpg in PIL  
     pil_im = Image.open("grab.jpg")
-    
     # Dither the image into a 1 bit bitmap (Just zeros and ones)
     pil_im = pil_im.convert(mode='1',dither=Image.FLOYDSTEINBERG)
-
     # display the image 
-    epd.display(epd.getbuffer(pil_im))
+    display_image_8bpp(display, 'grab.jpg')
+    
     print('Diplaying frame %d of %s' %(frame,currentVideo))
     
     currentPosition = currentPosition + increment 
@@ -195,20 +189,10 @@ while 1:
     log.write(str(currentPosition))
     log.close() 
 
-
     f = open('nowPlaying', 'w')
     f.write(currentVideo)
     f.close() 
-    
 
-#     epd.sleep()
     time.sleep(frameDelay)
-    epd.init()
 
-
-
-
-epd.sleep()
-    
-epd7in5.epdconfig.module_exit()
 exit()
