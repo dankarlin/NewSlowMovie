@@ -12,6 +12,7 @@
  
 import os, sys, random, time, argparse, ffmpeg
 from PIL import Image
+from PIL import ImageEnhance
 from working_test_functions import *
 from IT8951.display import AutoEPDDisplay
 
@@ -43,10 +44,12 @@ parser.add_argument('-f', '--file', type=check_mp4,
     help="Add a filename to start playing a specific film. Otherwise will pick a random file, and will move to another film randomly afterwards.")
 parser.add_argument('-d', '--delay',  default=120, 
     help="Delay between screen updates, in seconds")
-parser.add_argument('-i', '--inc',  default=4, 
+parser.add_argument('-i', '--inc',  default=8, 
     help="Number of frames skipped between screen updates")
 parser.add_argument('-s', '--start',  
     help="Start at a specific frame")
+parser.add_argument('-b', '--brightness',  default=2, 
+    help="Factor by which to change brightness of displayed image")
 args = parser.parse_args()
 
 frameDelay = float(args.delay)
@@ -165,9 +168,19 @@ while 1:
     generate_frame(inputVid, 'grab.jpg', msTimecode, width, height)
     # Open grab.jpg in PIL  
     pil_im = Image.open("grab.jpg")
+    
+    # Brighten image
+    enhancer = ImageEnhance.Brightness(pil_im)
+    pil_im_bright = enhancer.enhance(args.brightness)
+   
+    #Mirror image
+    pil_im_bright_flip = pil_im_bright.transpose(Image.FLIP_LEFT_RIGHT)
+   
     # Dither the image into a 1 bit bitmap (Just zeros and ones)
-    pil_im = pil_im.convert(mode='1',dither=Image.FLOYDSTEINBERG)
-    # display the image 
+    pil_im_bright_flip_dither = pil_im_bright_flip.convert(mode='1',dither=Image.FLOYDSTEINBERG)
+   
+    pil_im_bright_flip_dither.save('grab.jpg')
+   
     display_image_8bpp(display, 'grab.jpg')
     
     print('Diplaying frame %d of %s' %(frame,currentVideo))

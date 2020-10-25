@@ -3,6 +3,7 @@
 
 import os, sys, random, time
 from PIL import Image
+from PIL import ImageEnhance
 import ffmpeg
 from working_test_functions import *
 
@@ -61,8 +62,17 @@ while 1:
     # Open grab.jpg in PIL  
     pil_im = Image.open("grab.jpg")
     
+    # Brighten image
+    enhancer = ImageEnhance.Brightness(pil_im)
+    pil_im_bright = enhancer.enhance(2)
+    
+    #Mirror image
+    pil_im_bright_flip = pil_im_bright.transpose(Image.FLIP_LEFT_RIGHT)
+    
     # Dither the image into a 1 bit bitmap (Just zeros and ones)
-    pil_im = pil_im.convert(mode='1',dither=Image.FLOYDSTEINBERG)
+    pil_im_bright_flip_dither = pil_im_bright_flip.convert(mode='1',dither=Image.FLOYDSTEINBERG)
+    
+    pil_im_bright_flip_dither.save('grab.jpg')
 
     # display the image 
     display_image_8bpp(display, 'grab.jpg')

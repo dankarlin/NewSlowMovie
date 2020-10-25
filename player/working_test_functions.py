@@ -80,6 +80,7 @@ def display_image_8bpp(display, img_path):
     display.frame_buf.paste(img, paste_coords)
 
     display.draw_full(constants.DisplayModes.GC16)
+    #display.draw_partial(constants.DisplayModes.DU)
 
 def partial_update(display):
     print('Starting partial update...')
