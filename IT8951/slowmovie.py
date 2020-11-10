@@ -48,7 +48,7 @@ parser.add_argument('-i', '--inc',  default=8,
     help="Number of frames skipped between screen updates")
 parser.add_argument('-s', '--start',  
     help="Start at a specific frame")
-parser.add_argument('-b', '--brightness',  default=2, 
+parser.add_argument('-b', '--brightness',  default=1.3, 
     help="Factor by which to change brightness of displayed image")
 args = parser.parse_args()
 
